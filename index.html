@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mood Tracker</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .mood-container {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            max-width: 500px;
+            margin: 20px auto;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        .mood-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .mood-buttons button {
+            padding: 10px 15px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        .week-container {
+            margin-top: 20px;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 700px;
+            margin: auto;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        .week-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .week-header button {
+            padding: 5px 10px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .week-header #today {
+            background-color: #28a745;
+        }
+        .week {
+            overflow-x: auto;
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 10px;
+        }
+        .day {
+            padding: 15px;
+            background: white;
+            border-radius: 5px;
+            text-align: center;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+            min-height: 60px;
+            font-size: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <h1>Weekly Mood Tracker</h1>
+    <div class="mood-container">
+        <p><strong>How are you feeling today?</strong></p>
+        <div class="mood-buttons" id="mood-buttons"></div>
+    </div>
+    
+    <div class="week-container">
+        <div class="week-header">
+            <button id="prev-week">◀ Prev</button>
+            <div>
+                <button id="today">Today</button>
+                <h2 id="week-range"></h2>
+            </div>
+            <button id="next-week">Next ▶</button>
+        </div>
+        <div class="week" id="week"></div>
+    </div>
+
+    <script>
+        const moodOptions = {
+            '😀': 'Happy',
+            '😐': 'Neutral',
+            '😢': 'Sad',
+            '😎': 'Excited'
+        };
+        
+        const moodButtonsContainer = document.getElementById("mood-buttons");
+        const weekContainer = document.getElementById('week');
+        const weekRange = document.getElementById('week-range');
+        let currentDate = new Date();
+
+        Object.entries(moodOptions).forEach(([emoji, label]) => {
+            const button = document.createElement("button");
+            button.textContent = `${emoji} ${label}`;
+            button.addEventListener("click", () => saveMood(emoji));
+            moodButtonsContainer.appendChild(button);
+        });
+
+        document.getElementById("prev-week").addEventListener("click", () => changeWeek(-7));
+        document.getElementById("next-week").addEventListener("click", () => changeWeek(7));
+        document.getElementById("today").addEventListener("click", () => {
+            currentDate = new Date();
+            displayWeek();
+        });
+
+        function saveMood(mood) {
+            const today = new Date().toISOString().split('T')[0];
+            let moods = JSON.parse(localStorage.getItem('moods')) || {};
+            moods[today] = mood;
+            localStorage.setItem('moods', JSON.stringify(moods));
+            displayWeek();
+        }
+
+        function displayWeek() {
+            weekContainer.innerHTML = '';
+            const moods = JSON.parse(localStorage.getItem('moods')) || {};
+            const startOfWeek = new Date(currentDate);
+            startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay());
+            const endOfWeek = new Date(startOfWeek);
+            endOfWeek.setDate(startOfWeek.getDate() + 6);
+            
+            weekRange.textContent = `${startOfWeek.toDateString()} - ${endOfWeek.toDateString()}`;
+            
+            for (let i = 0; i < 7; i++) {
+                let dayDate = new Date(startOfWeek);
+                dayDate.setDate(startOfWeek.getDate() + i);
+                let dateStr = dayDate.toISOString().split('T')[0];
+                let dayBox = document.createElement('div');
+                dayBox.classList.add('day');
+                dayBox.innerHTML = `<strong>${dayDate.toDateString()}</strong><br>${moods[dateStr] || '📅'}`;
+                weekContainer.appendChild(dayBox);
+            }
+        }
+
+        function changeWeek(offset) {
+            currentDate.setDate(currentDate.getDate() + offset);
+            displayWeek();
+        }
+
+        displayWeek();
+    </script>
+</body>
+</html>
