@@ -30,15 +30,12 @@ The Mood Tracker is a simple web application that allows users to log their dail
 The application is hosted on **[Live Demo Link](https://sage-entremet-eb40c7.netlify.app/)**.
 
 ## Screenshots
-![Mood Selection](https://drive.google.com/file/d/14NnOgHNQJknl_pEFeV7gLE-BgrJXVx4z/view?usp=sharing)
-![Weekly Calendar View](https://drive.google.com/file/d/1rCsLY4oaotw2NGtO9r6fZVBaL5DohweY/view?usp=sharing)
-![Mobile View](https://drive.google.com/file/d/1dRiq0x_QzXnNMwY2tN4jqiFTCusfm8iW/view?usp=sharing)
+![Mood Selection](assets/mood.png)  
+![Weekly Calendar View](assets/Calender.png)  
+![Mobile View](assets/mobile.png) 
 
 
 ## Submission
 - GitHub Repository: [Repository Link](https://github.com/dhimannikhil300/MoodTrackerApp.git)
 - Live Demo: [Deployment Link](https://sage-entremet-eb40c7.netlify.app/)
-
-## License
-This project is licensed under the MIT License.
 
